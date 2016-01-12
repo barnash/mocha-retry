@@ -4,17 +4,24 @@
   "description": "a way to retry tests",
   "main": "index.js",
   "author": "Giovanni Bassi <giggio@giggio.net>",
+  "contributors": ["TrejGun <trejgun@gmail.com>"],
   "license": "GPL-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/giggio/mocha-retry"
+    "url": "https://github.com/TrejGun/mocha-retry"
   },
+  "files": [
+    "bddRetryInterface.js",
+    "index.js",
+    "retryHook.js",
+    "retrySuite.js",
+    "retryTest.js"
+  ],
   "dependencies": {
-    "mocha": "^2.3.0"
+    "mocha": "2.3.4"
   },
   "devDependencies": {
-    "coffee-script": "^1.10.0",
-    "q": "^1.4.1",
-    "chai": "^3.2.0"
+    "q": "1.4.1",
+    "chai": "3.4.1"
   }
 }
