@@ -1,4 +1,4 @@
---compilers coffee:coffee-script/register
+--compilers js:babel-core/register
 --require test/_specHelper.js
 --ui mocha-retry
 --timeout 1000
