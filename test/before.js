@@ -65,7 +65,7 @@ describe("Some suite with beforeEach with retry", () => {
 });
 
 describe("Before all using global default retry", () => {
-	global.DEFAULT_RETRY = 2;
+	process.env.MOCHA_RETRY = 2;
 	describe("inner suite (needed to apply global retry)", () => {
 		let valueAll = 0;
 		before(() => {
@@ -83,10 +83,10 @@ describe("Before all using global default retry", () => {
 	});
 });
 
-delete global.DEFAULT_RETRY;
+delete process.env.MOCHA_RETRY;
 
 describe("Before all With global default retry but overriding it", () => {
-	global.DEFAULT_RETRY = 2;
+	process.env.MOCHA_RETRY = 2;
 	describe("inner suite with specific retry (needed to apply global retry)", () => {
 		let valueAll = 0;
 		before(3, () => {
@@ -96,18 +96,18 @@ describe("Before all With global default retry but overriding it", () => {
 			}
 		});
 		it("verifies the value", () => {
-			 valueAll.should.equal(3);
+			valueAll.should.equal(3);
 		});
 		it("verifies the value again", () => {
-			 valueAll.should.equal(3);
+			valueAll.should.equal(3);
 		});
 	});
 });
 
-delete global.DEFAULT_RETRY;
+delete process.env.MOCHA_RETRY;
 
 describe("Before each using global default retry", () => {
-	global.DEFAULT_RETRY = 2;
+	process.env.MOCHA_RETRY = 2;
 	describe("inner suite (needed to apply global retry)", () => {
 		let valueEach = 0;
 		beforeEach(function () {
@@ -117,18 +117,18 @@ describe("Before each using global default retry", () => {
 			}
 		});
 		it("verifies the value once", () => {
-			 valueEach.should.equal(2);
+			valueEach.should.equal(2);
 		});
 		it("verifies the value twice", () => {
-			 valueEach.should.equal(4);
+			valueEach.should.equal(4);
 		});
 	});
 });
 
-delete global.DEFAULT_RETRY;
+delete process.env.MOCHA_RETRY;
 
 describe("Before each With global default retry but overriding it", () => {
-	global.DEFAULT_RETRY = 2;
+	process.env.MOCHA_RETRY = 2;
 	describe("inner suite with specific retry (needed to apply global retry)", () => {
 		let valueEach = 0;
 		beforeEach(3, () => {
@@ -138,13 +138,13 @@ describe("Before each With global default retry but overriding it", () => {
 			}
 		});
 		it("verifies the value once", () => {
-			 valueEach.should.equal(3);
+			valueEach.should.equal(3);
 		});
 		it("verifies the value twice", () => {
-			 valueEach.should.equal(6);
+			valueEach.should.equal(6);
 		});
 	});
 });
 
-delete global.DEFAULT_RETRY;
+delete process.env.MOCHA_RETRY;
 

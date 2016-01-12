@@ -68,7 +68,7 @@ describe(2, "Some retry suite with before", () => {
 		if (times % 2 !== 0) {
 			return done(new Error("not even"));
 		}
-		 done();
+		done();
 	});
 });
 
@@ -95,7 +95,7 @@ describe(2, "A retry suite with tests with retry", () => {
 		if (times % 4 !== 0) {
 			return done(new Error("cant divide by 4"));
 		}
-		 done();
+		done();
 	});
 });
 
@@ -133,10 +133,10 @@ describe(2, "A retry suite with a sub suite", () => {
 			if (times % 2 !== 0) {
 				return done(new Error("not even"));
 			}
-			 done();
+			done();
 		});
 	});
-	 describe(3, "A sub suite with retry redefined", () => {
+	describe(3, "A sub suite with retry redefined", () => {
 		before(() => {
 			times = 0;
 		});
@@ -159,17 +159,17 @@ describe(2, "A retry suite with a sub suite", () => {
 			if (times % 3 !== 0) {
 				return done(new Error("not divisible by 3"));
 			}
-			 done();
+			done();
 		});
 	});
 });
 
 describe("Using global default retry", () => {
-	global.DEFAULT_RETRY = 2;
+	process.env.MOCHA_RETRY = 2;
 	before(() => {
 		times = 0;
 	});
-	 describe("inner suite (needed to apply global retry)", () => {
+	describe("inner suite (needed to apply global retry)", () => {
 		it("works with a retried test not async", () => {
 			times++;
 			if (times % 2 !== 0) {
@@ -189,15 +189,15 @@ describe("Using global default retry", () => {
 			if (times % 2 !== 0) {
 				return done(new Error("not even"));
 			}
-			 done();
+			done();
 		});
 	});
 });
 
-delete global.DEFAULT_RETRY;
+delete process.env.MOCHA_RETRY;
 
 describe("With global default retry but overriding it", () => {
-	global.DEFAULT_RETRY = 2;
+	process.env.MOCHA_RETRY = 2;
 	before(() => {
 		times = 0;
 	});
@@ -221,7 +221,7 @@ describe("With global default retry but overriding it", () => {
 			if (times % 3 !== 0) {
 				return done(new Error("not three"));
 			}
-			 done();
+			done();
 		});
 	});
 	describe("inner suite with tests that specify retry (needed to apply global retry)", () => {
@@ -244,11 +244,11 @@ describe("With global default retry but overriding it", () => {
 			if (times % 3 !== 0) {
 				return done(new Error("not three"));
 			}
-			 done();
+			done();
 		});
 	});
 });
 
-delete global.DEFAULT_RETRY;
+delete process.env.MOCHA_RETRY;
 
 

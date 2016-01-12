@@ -28,7 +28,7 @@ RetryTest.prototype.run = function (fn) {
 	}(this);
 	done = function (_this) {
 		return function (err) {
-			var start;
+			var start = undefined;
 			if (_this.timedOut) {
 				return;
 			}

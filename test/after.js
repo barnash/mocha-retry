@@ -66,7 +66,7 @@ describe("Some suite with afterEach", () => {
 });
 
 describe("After all using global default retry", () => {
-	global.DEFAULT_RETRY = 2;
+	process.env.MOCHA_RETRY = 2;
 	describe("inner suite (needed to apply global retry)", () => {
 		let valueAll = 0;
 		after(() => {
@@ -84,10 +84,10 @@ describe("After all using global default retry", () => {
 	});
 });
 
-delete global.DEFAULT_RETRY;
+delete process.env.MOCHA_RETRY;
 
 describe("After all With global default retry but overriding it", () => {
-	global.DEFAULT_RETRY = 2;
+	process.env.MOCHA_RETRY = 2;
 	describe("inner suite with specific retry (needed to apply global retry)", () => {
 		let valueAll = 0;
 		after(3, () => {
@@ -105,10 +105,10 @@ describe("After all With global default retry but overriding it", () => {
 	});
 });
 
-delete global.DEFAULT_RETRY;
+delete process.env.MOCHA_RETRY;
 
 describe("After each using global default retry", () => {
-	global.DEFAULT_RETRY = 2;
+	process.env.MOCHA_RETRY = 2;
 	describe("inner suite (needed to apply global retry)", () => {
 		let valueEach = 0;
 		afterEach(() => {
@@ -126,10 +126,10 @@ describe("After each using global default retry", () => {
 	});
 });
 
-delete global.DEFAULT_RETRY;
+delete process.env.MOCHA_RETRY;
 
 describe("After each With global default retry but overriding it", () => {
-	global.DEFAULT_RETRY = 2;
+	process.env.MOCHA_RETRY = 2;
 	describe("inner suite with specific retry (needed to apply global retry)", () => {
 		let valueEach = 0;
 		afterEach(3, () => {
@@ -147,4 +147,4 @@ describe("After each With global default retry but overriding it", () => {
 	});
 });
 
-delete global.DEFAULT_RETRY;
+delete process.env.MOCHA_RETRY;

@@ -3,13 +3,13 @@
 
 var RetryHook, Runnable;
 
-RetryHook = function(times, title, fn) {
+RetryHook = function (times, title, fn) {
 	Runnable.call(this, title, fn);
 	this.times = times || 1;
 	return this.type = "hook";
 };
 
-RetryHook.prototype.error = function(err) {
+RetryHook.prototype.error = function (err) {
 	if (arguments.length === 0) {
 		err = this._error;
 		this._error = null;
@@ -18,12 +18,12 @@ RetryHook.prototype.error = function(err) {
 	return this._error = err;
 };
 
-RetryHook.prototype.run = function(fn) {
+RetryHook.prototype.run = function (fn) {
 	var done, emitted, finished, multiple, runTimes, start;
 	finished = emitted = void 0;
 	runTimes = 1;
-	multiple = (function(_this) {
-		return function(err) {
+	multiple = (function (_this) {
+		return function (err) {
 			if (emitted) {
 				return;
 			}
@@ -31,8 +31,8 @@ RetryHook.prototype.run = function(fn) {
 			return _this.emit("error", err || new Error("done() called multiple times"));
 		};
 	})(this);
-	done = (function(_this) {
-		return function(err) {
+	done = (function (_this) {
+		return function (err) {
 			var start;
 			if (_this.timedOut) {
 				return;
@@ -55,7 +55,7 @@ RetryHook.prototype.run = function(fn) {
 	return this._run(fn, done);
 };
 
-RetryHook.prototype._run = function(fn, done) {
+RetryHook.prototype._run = function (fn, done) {
 	var callFn, ctx, err, error, error1, ms;
 	ms = this.timeout();
 	ctx = this.ctx;
@@ -66,7 +66,7 @@ RetryHook.prototype._run = function(fn, done) {
 	if (this.async) {
 		this.resetTimeout();
 		try {
-			this.fn.call(ctx, function(err) {
+			this.fn.call(ctx, function (err) {
 				if (err instanceof Error || toString.call(err) === "[object Error]") {
 					return done(err);
 				}
@@ -84,13 +84,13 @@ RetryHook.prototype._run = function(fn, done) {
 	if (this.asyncOnly) {
 		return done(new Error("--async-only option in use without declaring `done()`"));
 	}
-	callFn = (function(_this) {
-		return function(fn) {
+	callFn = (function (_this) {
+		return function (fn) {
 			var result;
 			result = fn.call(ctx);
 			if (result && typeof result.then === "function") {
 				_this.resetTimeout();
-				return result.then((function() {
+				return result.then((function () {
 					return done();
 				}), done);
 			} else {
