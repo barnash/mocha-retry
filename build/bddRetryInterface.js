@@ -6,6 +6,10 @@ var _retryTest = require("./retryTest");
 
 var _retryTest2 = _interopRequireDefault(_retryTest);
 
+var _escapeStringRegexp = require("escape-string-regexp");
+
+var _escapeStringRegexp2 = _interopRequireDefault(_escapeStringRegexp);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 module.exports = function createInterface() {
@@ -85,7 +89,7 @@ module.exports = function createInterface() {
 			};
 			context.it.only = function (times, title, fn) {
 				var test = context.it(times, title, fn);
-				var reString = "^" + _mocha.utils.escapeRegexp(test.fullTitle()) + "$";
+				var reString = "^" + (0, _escapeStringRegexp2.default)(test.fullTitle()) + "$";
 				mocha.grep(new RegExp(reString));
 				return test;
 			};

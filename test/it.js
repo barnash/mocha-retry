@@ -6,7 +6,6 @@ let times = 0;
 
 describe("A non retry suite", () => {
 	it("works with a normal, non retry test", () => {
-		true;
 	});
 	it("works with a normal, async, non retry test", (done) => {
 		done();
@@ -42,8 +41,8 @@ describe("A suite with tests with retry", () => {
 });
 
 describe("Some non retry suite with before", () => {
-	var valueAll, valueEach;
-	valueAll = valueEach = void 0;
+	let valueAll;
+	let valueEach;
 	before(() => {
 		valueAll = true;
 	});
@@ -68,8 +67,8 @@ describe("Some non retry suite with before", () => {
 });
 
 describe("Some retry suite with before with retry on tests", () => {
-	var valueAll, valueEach;
-	valueAll = valueEach = void 0;
+	let valueAll;
+	let valueEach;
 	before(() => {
 		valueAll = true;
 	});

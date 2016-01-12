@@ -1,8 +1,8 @@
 "use strict";
 
-import {utils, Suite} from "mocha";
+import {Suite} from "mocha";
 import RetryTest from "./retryTest";
-
+import escapeStringRegexp from "escape-string-regexp";
 
 module.exports = function createInterface() {
 
@@ -56,7 +56,7 @@ module.exports = function createInterface() {
 			};
 			context.it.only = (times, title, fn) => {
 				const test = context.it(times, title, fn);
-				const reString = "^" + utils.escapeRegexp(test.fullTitle()) + "$";
+				const reString = "^" + escapeStringRegexp(test.fullTitle()) + "$";
 				mocha.grep(new RegExp(reString));
 				return test;
 			};

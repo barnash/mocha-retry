@@ -15,6 +15,9 @@
   "files": [
     "build"
   ],
+  "dependencies": {
+    "escape-string-regexp": "1.0.4"
+  },
   "peerDependencies": {
     "mocha": "2.3.4"
   },
