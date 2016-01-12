@@ -40,7 +40,7 @@ module.exports = function createInterface() {
 					title = _ref[1];
 					fn = _ref[2];
 				}
-				times = times || suites[0].times || process.env.MOCHA_RETRY;
+				times = times || suites[0].times || ~ ~process.env.MOCHA_RETRY;
 				var asuite = _mocha.Suite.create(suites[0], title);
 				asuite.times = times;
 				asuite.file = file;

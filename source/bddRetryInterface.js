@@ -17,7 +17,7 @@ module.exports = function createInterface() {
 				if (!fn) {
 					[times, title, fn] = [void 0, times, title];
 				}
-				times = times || suites[0].times || process.env.MOCHA_RETRY;
+				times = times || suites[0].times || ~~process.env.MOCHA_RETRY;
 				const asuite = Suite.create(suites[0], title);
 				asuite.times = times;
 				asuite.file = file;
