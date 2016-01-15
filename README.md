@@ -27,25 +27,30 @@ most of the issues caused by the inherent instability of such tests, but some ar
 
 You can specify the retry count on the test directly like this:
 
-```coffeescript
-it 2, 'a test', ->
-  #your test goes here, it will be retried at most twice
+```js
+it(2, "a test", () => {
+    // your test goes here, it will be retried at most twice
+});
 ```
 
 Or you can specify the retry count on the suite, like this:
 
-```coffeescript
-describe 4, 'some suite', ->
-  it 'a test', ->
-    #your test goes here, it will be retried at most twice
+```js
+describe(4, "some suite", () => {
+    it("a test", () => {
+        // your test goes here, it will be retried at most 4 times
+    });
+});
 ```
 
 If you specify both the test has precedence. This test will be retried at most twice, not 4 times:
 
-```coffeescript
-describe 4, 'some suite', ->
-  it 2, 'a test', ->
-    #your test goes here, it will be retried at most twice
+```js
+describe(4, "some suite", () => {
+    it(2, "a test", () => {
+        // your test goes here, it will be retried at most twice
+    });
+});
 ```
 
 You can still use the default `it` behaviour, without retry, just do not specify a retry as you normally would on a Mocha test.
@@ -58,7 +63,7 @@ Just run on your terminal:
 npm install mocha-retry
 ```
 
-Then you will have to change the ui, use `xunit-retry` as your ui. See the example [here](https://github.com/giggio/mocha-retry/blob/master/test/mocha.opts) on the mocha.opts file.
+Then you will have to change the ui, use `mocha-retry` as your ui. See the example [here](https://github.com/giggio/mocha-retry/blob/master/test/mocha.opts) on the mocha.opts file.
 
 ### Problems running it with a locally installed package
 
