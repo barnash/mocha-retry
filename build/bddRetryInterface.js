@@ -1,5 +1,10 @@
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = createInterface;
+
 var _mocha = require("mocha");
 
 var _retryTest = require("./retryTest");
@@ -12,7 +17,7 @@ var _escapeStringRegexp2 = _interopRequireDefault(_escapeStringRegexp);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-module.exports = function createInterface() {
+function createInterface() {
 
 	return function (suite) {
 		var suites = [suite];
@@ -88,6 +93,13 @@ module.exports = function createInterface() {
 				return test;
 			};
 			context.it.only = function (times, title, fn) {
+				var asuite = suites[0];
+				if (!fn && typeof times !== "number") {
+					var _ref4 = [process.env.MOCHA_IT_ONLY_ONCE === "true" ? 1 : asuite.times || 1, times, title];
+					times = _ref4[0];
+					title = _ref4[1];
+					fn = _ref4[2];
+				}
 				var test = context.it(times, title, fn);
 				var reString = "^" + (0, _escapeStringRegexp2.default)(test.fullTitle()) + "$";
 				mocha.grep(new RegExp(reString));
@@ -98,10 +110,10 @@ module.exports = function createInterface() {
 					return context.it(times);
 				}
 				if (!fn) {
-					var _ref4 = [1, times, title];
-					times = _ref4[0];
-					title = _ref4[1];
-					fn = _ref4[2];
+					var _ref5 = [1, times, title];
+					times = _ref5[0];
+					title = _ref5[1];
+					fn = _ref5[2];
 				}
 				return context.it(times, title);
 			};

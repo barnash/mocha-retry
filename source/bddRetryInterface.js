@@ -4,7 +4,7 @@ import {Suite} from "mocha";
 import RetryTest from "./retryTest";
 import escapeStringRegexp from "escape-string-regexp";
 
-module.exports = function createInterface() {
+export default function createInterface() {
 
 	return (suite) => {
 		const suites = [suite];
@@ -55,6 +55,10 @@ module.exports = function createInterface() {
 				return test;
 			};
 			context.it.only = (times, title, fn) => {
+				const asuite = suites[0];
+				if (!fn && typeof times !== "number") {
+					[times, title, fn] = [process.env.MOCHA_IT_ONLY_ONCE === "true" ? 1 : asuite.times || 1, times, title];
+				}
 				const test = context.it(times, title, fn);
 				const reString = "^" + escapeStringRegexp(test.fullTitle()) + "$";
 				mocha.grep(new RegExp(reString));
