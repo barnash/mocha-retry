@@ -1,6 +1,7 @@
 "use strict";
 
 import Q from "q";
+import assert from "assert";
 
 let times = 0;
 
@@ -44,16 +45,16 @@ describe(2, "Some retry suite with before", () => {
 		valueEach = false;
 	});
 	it("works with a retried test not async", () => {
-		valueEach.should.be.true; // eslint-disable-line no-unused-expressions
-		valueAll.should.be.true; // eslint-disable-line no-unused-expressions
+		assert.equal(valueEach, true);
+		assert.equal(valueAll, true);
 		times++;
 		if (times % 2 !== 0) {
 			throw new Error("not even");
 		}
 	});
 	it("works with a retried test with a promise", () => {
-		valueEach.should.be.true; // eslint-disable-line no-unused-expressions
-		valueAll.should.be.true; // eslint-disable-line no-unused-expressions
+		assert.equal(valueEach, true);
+		assert.equal(valueAll, true);
 		times++;
 		return Q.fcall(() => {
 			if (times % 2 !== 0) {
@@ -62,8 +63,8 @@ describe(2, "Some retry suite with before", () => {
 		});
 	});
 	it("works with a retried test with callback", (done) => {
-		valueEach.should.be.true; // eslint-disable-line no-unused-expressions
-		valueAll.should.be.true; // eslint-disable-line no-unused-expressions
+		assert.equal(valueEach, true);
+		assert.equal(valueAll, true);
 		times++;
 		if (times % 2 !== 0) {
 			return done(new Error("not even"));

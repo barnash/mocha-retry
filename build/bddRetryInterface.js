@@ -22,23 +22,23 @@ var _escapeStringRegexp2 = _interopRequireDefault(_escapeStringRegexp);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function createInterface() {
-
 	return function (suite) {
 		var suites = [suite];
 		suite.on("pre-require", function (context, file, mocha) {
-			context.before = function () {
+			var mixin = {};
+			mixin.before = function () {
 				return _retrySuite2.default.prototype.beforeAllWithRetry.bind(suites[0]).apply(undefined, arguments);
 			};
-			context.after = function () {
+			mixin.after = function () {
 				return _retrySuite2.default.prototype.afterAllWithRetry.bind(suites[0]).apply(undefined, arguments);
 			};
-			context.beforeEach = function () {
+			mixin.beforeEach = function () {
 				return _retrySuite2.default.prototype.beforeEachWithRetry.bind(suites[0]).apply(undefined, arguments);
 			};
-			context.afterEach = function () {
+			mixin.afterEach = function () {
 				return _retrySuite2.default.prototype.afterEachWithRetry.bind(suites[0]).apply(undefined, arguments);
 			};
-			context.describe = context.context = function () {
+			mixin.describe = mixin.context = function () {
 				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
 					args[_key] = arguments[_key];
 				}
@@ -57,7 +57,7 @@ function createInterface() {
 				suites.shift();
 				return asuite;
 			};
-			context.xdescribe = context.xcontext = context.describe.skip = function () {
+			mixin.xdescribe = mixin.xcontext = mixin.describe.skip = function () {
 				for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
 					args[_key2] = arguments[_key2];
 				}
@@ -73,12 +73,12 @@ function createInterface() {
 				fn.call(asuite);
 				return suites.shift();
 			};
-			context.describe.only = function () {
+			mixin.describe.only = function () {
 				var asuite = context.describe.apply(context, arguments);
 				mocha.grep(asuite.fullTitle());
 				return asuite;
 			};
-			context.it = context.itretry = function () {
+			mixin.it = mixin.itretry = function () {
 				for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
 					args[_key3] = arguments[_key3];
 				}
@@ -97,7 +97,7 @@ function createInterface() {
 				asuite.addTest(test);
 				return test;
 			};
-			context.it.only = function () {
+			mixin.it.only = function () {
 				for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
 					args[_key4] = arguments[_key4];
 				}
@@ -115,7 +115,7 @@ function createInterface() {
 				mocha.grep(new RegExp(reString));
 				return test;
 			};
-			context.xit = context.xspecify = context.it.skip = function () {
+			mixin.xit = mixin.xspecify = mixin.it.skip = function () {
 				for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
 					args[_key5] = arguments[_key5];
 				}
@@ -126,6 +126,7 @@ function createInterface() {
 
 				return context.it(1, title);
 			};
+			Object.assign(context, mixin);
 		});
 	};
 }

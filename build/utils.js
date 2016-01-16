@@ -5,7 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.normalize = normalize;
 function normalize(fallback) {
-
 	var result = {};
 
 	for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {

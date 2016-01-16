@@ -1,5 +1,7 @@
 "use strict";
 
+import assert from "assert";
+
 describe("Some suite with before and no retry", () => {
 	let valueAll = 0;
 	before(() => {
@@ -9,10 +11,10 @@ describe("Some suite with before and no retry", () => {
 		}
 	});
 	it("verifies the value", () => {
-		valueAll.should.equal(2);
+		assert.equal(valueAll, 2);
 	});
 	it("verifies the value again", () => {
-		valueAll.should.equal(2);
+		assert.equal(valueAll, 2);
 	});
 });
 
@@ -25,10 +27,10 @@ describe("Some suite with before with retry", () => {
 		}
 	});
 	it("verifies the value", () => {
-		valueAll.should.equal(2);
+		assert.equal(valueAll, 2);
 	});
 	it("verifies the value again", () => {
-		valueAll.should.equal(2);
+		assert.equal(valueAll, 2);
 	});
 });
 
@@ -41,10 +43,10 @@ describe("Some suite with beforeEach and no retry", () => {
 		}
 	});
 	it("verifies the value once", () => {
-		valueEach.should.equal(2);
+		assert.equal(valueEach, 2);
 	});
 	it("verifies the value twice", () => {
-		valueEach.should.equal(4);
+		assert.equal(valueEach, 4);
 	});
 });
 
@@ -57,10 +59,10 @@ describe("Some suite with beforeEach with retry", () => {
 		}
 	});
 	it("verifies the value once", () => {
-		valueEach.should.equal(2);
+		assert.equal(valueEach, 2);
 	});
 	it("verifies the value twice", () => {
-		valueEach.should.equal(4);
+		assert.equal(valueEach, 4);
 	});
 });
 
@@ -75,10 +77,10 @@ describe("Before all using global default retry", () => {
 			}
 		});
 		it("verifies the value", () => {
-			valueAll.should.equal(2);
+			assert.equal(valueAll, 2);
 		});
 		it("verifies the value again", () => {
-			valueAll.should.equal(2);
+			assert.equal(valueAll, 2);
 		});
 	});
 });
@@ -96,10 +98,10 @@ describe("Before all With global default retry but overriding it", () => {
 			}
 		});
 		it("verifies the value", () => {
-			valueAll.should.equal(3);
+			assert.equal(valueAll, 3);
 		});
 		it("verifies the value again", () => {
-			valueAll.should.equal(3);
+			assert.equal(valueAll, 3);
 		});
 	});
 });
@@ -117,10 +119,10 @@ describe("Before each using global default retry", () => {
 			}
 		});
 		it("verifies the value once", () => {
-			valueEach.should.equal(2);
+			assert.equal(valueEach, 2);
 		});
 		it("verifies the value twice", () => {
-			valueEach.should.equal(4);
+			assert.equal(valueEach, 4);
 		});
 	});
 });
@@ -138,10 +140,10 @@ describe("Before each With global default retry but overriding it", () => {
 			}
 		});
 		it("verifies the value once", () => {
-			valueEach.should.equal(3);
+			assert.equal(valueEach, 3);
 		});
 		it("verifies the value twice", () => {
-			valueEach.should.equal(6);
+			assert.equal(valueEach, 6);
 		});
 	});
 });

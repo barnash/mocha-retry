@@ -9,7 +9,7 @@
       "never"
     ],
     "indent": [
-      0,
+      2,
       "tab"
     ],
     "quotes": [
@@ -19,16 +19,6 @@
     "object-curly-spacing": [
       2,
       "never"
-    ],
-    "no-param-reassign": [
-      0
-    ],
-    "padded-blocks": [
-      0,
-      "never"
-    ],
-    "max-len": [
-      0
     ]
   },
   "env": {

@@ -1,7 +1,6 @@
 "use strict";
 
 export function normalize(fallback, ...args) {
-
 	const result = {};
 	args.forEach(arg => {
 		switch (Object.prototype.toString.call(arg)) {

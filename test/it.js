@@ -1,6 +1,7 @@
 "use strict";
 
 import Q from "q";
+import assert from "assert";
 
 let times = 0;
 
@@ -56,12 +57,12 @@ describe("Some non retry suite with before", () => {
 		valueEach = false;
 	});
 	it("works with a normal, non retry test", () => {
-		valueEach.should.be.true;  // eslint-disable-line no-unused-expressions
-		valueAll.should.be.true;  // eslint-disable-line no-unused-expressions
+		assert.equal(valueEach, true);
+		assert.equal(valueAll, true);
 	});
 	it("works with a normal, async, non retry test", (done) => {
-		valueEach.should.be.true;  // eslint-disable-line no-unused-expressions
-		valueAll.should.be.true;  // eslint-disable-line no-unused-expressions
+		assert.equal(valueEach, true);
+		assert.equal(valueAll, true);
 		done();
 	});
 });
@@ -82,16 +83,16 @@ describe("Some retry suite with before with retry on tests", () => {
 		valueEach = false;
 	});
 	it(2, "works with a retried test not async", () => {
-		valueEach.should.be.true;  // eslint-disable-line no-unused-expressions
-		valueAll.should.be.true;  // eslint-disable-line no-unused-expressions
+		assert.equal(valueEach, true);
+		assert.equal(valueAll, true);
 		times++;
 		if (times % 2 !== 0) {
 			throw new Error("not even");
 		}
 	});
 	it(2, "works with a retried test with a promise", () => {
-		valueEach.should.be.true;  // eslint-disable-line no-unused-expressions
-		valueAll.should.be.true;  // eslint-disable-line no-unused-expressions
+		assert.equal(valueEach, true);
+		assert.equal(valueAll, true);
 		times++;
 		return Q.fcall(() => {
 			if (times % 2 !== 0) {
@@ -100,8 +101,8 @@ describe("Some retry suite with before with retry on tests", () => {
 		});
 	});
 	it(2, "works with a retried test with callback", (done) => {
-		valueEach.should.be.true;  // eslint-disable-line no-unused-expressions
-		valueAll.should.be.true;  // eslint-disable-line no-unused-expressions
+		assert.equal(valueEach, true);
+		assert.equal(valueAll, true);
 		times++;
 		if (times % 2 !== 0) {
 			return done(new Error("not even"));
@@ -117,7 +118,7 @@ describe("Some retry suite with a beforeEach method", () => {
 		value++;
 	});
 	it(retryTimes, "should call beforeEach for every retry", () => {
-		value.should.equal(retryTimes);
+		assert.equal(value, retryTimes);
 		if (value !== retryTimes) {
 			throw new Error("Not correct value");
 		}
