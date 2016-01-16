@@ -2,127 +2,72 @@
 
 import {Suite} from "mocha";
 import RetryHook from "./retryHook";
+import {normalize} from "./utils";
 
-Suite.prototype.beforeAllWithRetry = function (times, title, fn) {
-	if (this.pending) {
-		return this;
+export default class RetrySuite extends Suite {
+
+	beforeAllWithRetry() {
+		if (this.pending) {
+			return;
+		}
+
+		const {times, title, fn} = normalize(this.times, ...arguments);
+
+		const hook = new RetryHook(times, `"before all" hook: ${title || "--"}`, fn);
+		hook.parent = this;
+		hook.timeout(this.timeout());
+		hook.slow(this.slow());
+		hook.ctx = this.ctx;
+		this._beforeAll.push(hook);
+		this.emit("beforeAll", hook);
 	}
 
-	if (!title) {
-		[times, title, fn] = [void 0, times.name, times];
-	} else if (!fn) {
-		if (typeof times === "number") {
-			[title, fn] = [void 0, title];
-		} else {
-			[times, title, fn] = [void 0, times, title];
+	beforeEachWithRetry() {
+		if (this.pending) {
+			return;
 		}
-		if (typeof title === "function") {
-			[title, fn] = [fn.name, title];
-		}
+
+		const {times, title, fn} = normalize(this.times, ...arguments);
+
+		const hook = new RetryHook(times, `"before each" hook: ${title || "--"}`, fn);
+		hook.parent = this;
+		hook.timeout(this.timeout());
+		hook.slow(this.slow());
+		hook.ctx = this.ctx;
+		this._beforeEach.push(hook);
+		this.emit("beforeEach", hook);
 	}
 
-	times = times || this.times;
+	afterAllWithRetry() {
+		if (this.pending) {
+			return;
+		}
 
-	title = "\"before all\" hook" + (title ? ": " + title : "");
-	const hook = new RetryHook(times, title, fn);
-	hook.parent = this;
-	hook.timeout(this.timeout());
-	hook.slow(this.slow());
-	hook.ctx = this.ctx;
-	this._beforeAll.push(hook);
-	this.emit("beforeAll", hook);
-	return this;
-};
+		const {times, title, fn} = normalize(this.times, ...arguments);
 
-Suite.prototype.beforeEachWithRetry = function (times, title, fn) {
-	if (this.pending) {
-		return this;
+		const hook = new RetryHook(times, `"after all" hook: ${title || "--"}`, fn);
+		hook.parent = this;
+		hook.timeout(this.timeout());
+		hook.slow(this.slow());
+		hook.ctx = this.ctx;
+		this._afterAll.push(hook);
+		this.emit("afterAll", hook);
 	}
 
-	if (!title) {
-		[times, title, fn] = [void 0, times.name, times];
-	} else if (!fn) {
-		if (typeof times === "number") {
-			[title, fn] = [void 0, title];
-		} else {
-			[times, title, fn] = [void 0, times, title];
+	afterEachWithRetry() {
+		if (this.pending) {
+			return;
 		}
-		if (typeof title === "function") {
-			[title, fn] = [fn.name, title];
-		}
+
+		const {times, title, fn} = normalize(this.times, ...arguments);
+
+		const hook = new RetryHook(times, `"after each" hook: ${title || "--"}`, fn);
+		hook.parent = this;
+		hook.timeout(this.timeout());
+		hook.slow(this.slow());
+		hook.ctx = this.ctx;
+		this._afterEach.push(hook);
+		this.emit("afterEach", hook);
 	}
 
-	times = times || this.times;
-
-	title = "\"before each\" hook" + (title ? ": " + title : "");
-	const hook = new RetryHook(times, title, fn);
-	hook.parent = this;
-	hook.timeout(this.timeout());
-	hook.slow(this.slow());
-	hook.ctx = this.ctx;
-	this._beforeEach.push(hook);
-	this.emit("beforeEach", hook);
-	return this;
-};
-
-Suite.prototype.afterAllWithRetry = function (times, title, fn) {
-	if (this.pending) {
-		return this;
-	}
-
-	if (!title) {
-		[times, title, fn] = [void 0, times.name, times];
-	} else if (!fn) {
-		if (typeof times === "number") {
-			[title, fn] = [void 0, title];
-		} else {
-			[times, title, fn] = [void 0, times, title];
-		}
-		if (typeof title === "function") {
-			[title, fn] = [fn.name, title];
-		}
-	}
-
-	times = times || this.times;
-
-	title = "\"after all\" hook" + (title ? ": " + title : "");
-	const hook = new RetryHook(times, title, fn);
-	hook.parent = this;
-	hook.timeout(this.timeout());
-	hook.slow(this.slow());
-	hook.ctx = this.ctx;
-	this._afterAll.push(hook);
-	this.emit("afterAll", hook);
-	return this;
-};
-
-Suite.prototype.afterEachWithRetry = function (times, title, fn) {
-	if (this.pending) {
-		return this;
-	}
-
-	if (!title) {
-		[times, title, fn] = [void 0, times.name, times];
-	} else if (!fn) {
-		if (typeof times === "number") {
-			[title, fn] = [void 0, title];
-		} else {
-			[times, title, fn] = [void 0, times, title];
-		}
-		if (typeof title === "function") {
-			[title, fn] = [fn.name, title];
-		}
-	}
-
-	times = times || this.times;
-
-	title = "\"after each\" hook" + (title ? ": " + title : "");
-	const hook = new RetryHook(times, title, fn);
-	hook.parent = this;
-	hook.timeout(this.timeout());
-	hook.slow(this.slow());
-	hook.ctx = this.ctx;
-	this._afterEach.push(hook);
-	this.emit("afterEach", hook);
-	return this;
-};
+}

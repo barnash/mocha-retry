@@ -5,11 +5,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = createInterface;
 
-var _mocha = require("mocha");
-
 var _retryTest = require("./retryTest");
 
 var _retryTest2 = _interopRequireDefault(_retryTest);
+
+var _retrySuite = require("./retrySuite");
+
+var _retrySuite2 = _interopRequireDefault(_retrySuite);
+
+var _utils = require("./utils");
 
 var _escapeStringRegexp = require("escape-string-regexp");
 
@@ -23,101 +27,105 @@ function createInterface() {
 		var suites = [suite];
 		suite.on("pre-require", function (context, file, mocha) {
 			context.before = function () {
-				var _suites$;
-
-				return (_suites$ = suites[0]).beforeAllWithRetry.apply(_suites$, arguments);
+				return _retrySuite2.default.prototype.beforeAllWithRetry.bind(suites[0]).apply(undefined, arguments);
 			};
 			context.after = function () {
-				var _suites$2;
-
-				return (_suites$2 = suites[0]).afterAllWithRetry.apply(_suites$2, arguments);
+				return _retrySuite2.default.prototype.afterAllWithRetry.bind(suites[0]).apply(undefined, arguments);
 			};
 			context.beforeEach = function () {
-				var _suites$3;
-
-				return (_suites$3 = suites[0]).beforeEachWithRetry.apply(_suites$3, arguments);
+				return _retrySuite2.default.prototype.beforeEachWithRetry.bind(suites[0]).apply(undefined, arguments);
 			};
 			context.afterEach = function () {
-				var _suites$4;
-
-				return (_suites$4 = suites[0]).afterEachWithRetry.apply(_suites$4, arguments);
+				return _retrySuite2.default.prototype.afterEachWithRetry.bind(suites[0]).apply(undefined, arguments);
 			};
-			context.describe = context.context = function (times, title, fn) {
-				if (!fn) {
-					var _ref = [void 0, times, title];
-					times = _ref[0];
-					title = _ref[1];
-					fn = _ref[2];
+			context.describe = context.context = function () {
+				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+					args[_key] = arguments[_key];
 				}
-				times = times || suites[0].times || ~ ~process.env.MOCHA_RETRY;
-				var asuite = _mocha.Suite.create(suites[0], title);
-				asuite.times = times;
+
+				var _normalize = _utils.normalize.apply(undefined, [suites[0].times].concat(args));
+
+				var times = _normalize.times;
+				var title = _normalize.title;
+				var fn = _normalize.fn;
+
+				var asuite = _retrySuite2.default.create(suites[0], title);
+				asuite.times = times || ~ ~process.env.MOCHA_RETRY;
 				asuite.file = file;
 				suites.unshift(asuite);
 				fn.call(asuite);
 				suites.shift();
 				return asuite;
 			};
-			context.xdescribe = context.xcontext = context.describe.skip = function (times, title, fn) {
-				if (!fn) {
-					var _ref2 = [void 0, times, title];
-					times = _ref2[0];
-					title = _ref2[1];
-					fn = _ref2[2];
+			context.xdescribe = context.xcontext = context.describe.skip = function () {
+				for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+					args[_key2] = arguments[_key2];
 				}
-				var asuite = _mocha.Suite.create(suites[0], title);
+
+				var _normalize2 = _utils.normalize.apply(undefined, [0].concat(args));
+
+				var title = _normalize2.title;
+				var fn = _normalize2.fn;
+
+				var asuite = _retrySuite2.default.create(suites[0], title);
 				asuite.pending = true;
 				suites.unshift(asuite);
 				fn.call(asuite);
 				return suites.shift();
 			};
-			context.describe.only = function (times, title, fn) {
-				var asuite = context.describe(times, title, fn);
+			context.describe.only = function () {
+				var asuite = context.describe.apply(context, arguments);
 				mocha.grep(asuite.fullTitle());
 				return asuite;
 			};
-			context.it = context.itretry = function (times, title, fn) {
+			context.it = context.itretry = function () {
+				for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+					args[_key3] = arguments[_key3];
+				}
+
 				var asuite = suites[0];
-				if (!fn && typeof times !== "number") {
-					var _ref3 = [asuite.times || 1, times, title];
-					times = _ref3[0];
-					title = _ref3[1];
-					fn = _ref3[2];
-				}
-				if (asuite.pending) {
-					fn = null;
-				}
-				var test = new _retryTest2.default(times, title, fn);
+
+				var _normalize3 = _utils.normalize.apply(undefined, [asuite.times || 1].concat(args));
+
+				var times = _normalize3.times;
+				var title = _normalize3.title;
+				var fn = _normalize3.fn;
+
+				var test = new _retryTest2.default(times, title, asuite.pending ? null : fn);
 				test.file = file;
 				asuite.addTest(test);
 				return test;
 			};
-			context.it.only = function (times, title, fn) {
-				var asuite = suites[0];
-				if (!fn && typeof times !== "number") {
-					var _ref4 = [process.env.MOCHA_IT_ONLY_ONCE === "true" ? 1 : asuite.times || 1, times, title];
-					times = _ref4[0];
-					title = _ref4[1];
-					fn = _ref4[2];
+			context.it.only = function () {
+				for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+					args[_key4] = arguments[_key4];
 				}
-				var test = context.it(times, title, fn);
+
+				var asuite = suites[0];
+
+				var _normalize4 = _utils.normalize.apply(undefined, [asuite.times || 1].concat(args));
+
+				var times = _normalize4.times;
+				var title = _normalize4.title;
+				var fn = _normalize4.fn;
+
+				var test = context.it(process.env.MOCHA_IT_ONLY_ONCE === "true" ? 1 : times, title, fn);
 				var reString = "^" + (0, _escapeStringRegexp2.default)(test.fullTitle()) + "$";
 				mocha.grep(new RegExp(reString));
 				return test;
 			};
-			context.xit = context.xspecify = context.it.skip = function (times, title, fn) {
-				if (!title) {
-					return context.it(times);
+			context.xit = context.xspecify = context.it.skip = function () {
+				for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+					args[_key5] = arguments[_key5];
 				}
-				if (!fn) {
-					var _ref5 = [1, times, title];
-					times = _ref5[0];
-					title = _ref5[1];
-					fn = _ref5[2];
-				}
-				return context.it(times, title);
+
+				var _normalize5 = _utils.normalize.apply(undefined, [0].concat(args));
+
+				var title = _normalize5.title;
+
+				return context.it(1, title);
 			};
 		});
 	};
-};
+}
 //# sourceMappingURL=bddRetryInterface.js.map

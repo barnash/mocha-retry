@@ -2,7 +2,7 @@
 
 describe("Some suite with before and no retry", () => {
 	let valueAll = 0;
-	before(function () {
+	before(() => {
 		valueAll += 2;
 		if (valueAll !== 2) {
 			throw new Error("has to be 2");
@@ -110,7 +110,7 @@ describe("Before each using global default retry", () => {
 	process.env.MOCHA_RETRY = 2;
 	describe("inner suite (needed to apply global retry)", () => {
 		let valueEach = 0;
-		beforeEach(function () {
+		beforeEach(() => {
 			valueEach++;
 			if (valueEach % 2 !== 0) {
 				throw new Error("isnt even");
@@ -147,4 +147,3 @@ describe("Before each With global default retry but overriding it", () => {
 });
 
 delete process.env.MOCHA_RETRY;
-

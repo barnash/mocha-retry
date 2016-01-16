@@ -1,174 +1,124 @@
 "use strict";
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
 var _mocha = require("mocha");
 
 var _retryHook = require("./retryHook");
 
 var _retryHook2 = _interopRequireDefault(_retryHook);
 
+var _utils = require("./utils");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_mocha.Suite.prototype.beforeAllWithRetry = function (times, title, fn) {
-	if (this.pending) {
-		return this;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var RetrySuite = function (_Suite) {
+	_inherits(RetrySuite, _Suite);
+
+	function RetrySuite() {
+		_classCallCheck(this, RetrySuite);
+
+		return _possibleConstructorReturn(this, Object.getPrototypeOf(RetrySuite).apply(this, arguments));
 	}
 
-	if (!title) {
-		var _ref = [void 0, times.name, times];
-		times = _ref[0];
-		title = _ref[1];
-		fn = _ref[2];
-	} else if (!fn) {
-		if (typeof times === "number") {
-			var _ref2 = [void 0, title];
-			title = _ref2[0];
-			fn = _ref2[1];
-		} else {
-			var _ref3 = [void 0, times, title];
-			times = _ref3[0];
-			title = _ref3[1];
-			fn = _ref3[2];
+	_createClass(RetrySuite, [{
+		key: "beforeAllWithRetry",
+		value: function beforeAllWithRetry() {
+			if (this.pending) {
+				return;
+			}
+
+			var _normalize = _utils.normalize.apply(undefined, [this.times].concat(Array.prototype.slice.call(arguments)));
+
+			var times = _normalize.times;
+			var title = _normalize.title;
+			var fn = _normalize.fn;
+
+			var hook = new _retryHook2.default(times, "\"before all\" hook: " + (title || "--"), fn);
+			hook.parent = this;
+			hook.timeout(this.timeout());
+			hook.slow(this.slow());
+			hook.ctx = this.ctx;
+			this._beforeAll.push(hook);
+			this.emit("beforeAll", hook);
 		}
-		if (typeof title === "function") {
-			var _ref4 = [fn.name, title];
-			title = _ref4[0];
-			fn = _ref4[1];
+	}, {
+		key: "beforeEachWithRetry",
+		value: function beforeEachWithRetry() {
+			if (this.pending) {
+				return;
+			}
+
+			var _normalize2 = _utils.normalize.apply(undefined, [this.times].concat(Array.prototype.slice.call(arguments)));
+
+			var times = _normalize2.times;
+			var title = _normalize2.title;
+			var fn = _normalize2.fn;
+
+			var hook = new _retryHook2.default(times, "\"before each\" hook: " + (title || "--"), fn);
+			hook.parent = this;
+			hook.timeout(this.timeout());
+			hook.slow(this.slow());
+			hook.ctx = this.ctx;
+			this._beforeEach.push(hook);
+			this.emit("beforeEach", hook);
 		}
-	}
+	}, {
+		key: "afterAllWithRetry",
+		value: function afterAllWithRetry() {
+			if (this.pending) {
+				return;
+			}
 
-	times = times || this.times;
+			var _normalize3 = _utils.normalize.apply(undefined, [this.times].concat(Array.prototype.slice.call(arguments)));
 
-	title = "\"before all\" hook" + (title ? ": " + title : "");
-	var hook = new _retryHook2.default(times, title, fn);
-	hook.parent = this;
-	hook.timeout(this.timeout());
-	hook.slow(this.slow());
-	hook.ctx = this.ctx;
-	this._beforeAll.push(hook);
-	this.emit("beforeAll", hook);
-	return this;
-};
+			var times = _normalize3.times;
+			var title = _normalize3.title;
+			var fn = _normalize3.fn;
 
-_mocha.Suite.prototype.beforeEachWithRetry = function (times, title, fn) {
-	if (this.pending) {
-		return this;
-	}
-
-	if (!title) {
-		var _ref5 = [void 0, times.name, times];
-		times = _ref5[0];
-		title = _ref5[1];
-		fn = _ref5[2];
-	} else if (!fn) {
-		if (typeof times === "number") {
-			var _ref6 = [void 0, title];
-			title = _ref6[0];
-			fn = _ref6[1];
-		} else {
-			var _ref7 = [void 0, times, title];
-			times = _ref7[0];
-			title = _ref7[1];
-			fn = _ref7[2];
+			var hook = new _retryHook2.default(times, "\"after all\" hook: " + (title || "--"), fn);
+			hook.parent = this;
+			hook.timeout(this.timeout());
+			hook.slow(this.slow());
+			hook.ctx = this.ctx;
+			this._afterAll.push(hook);
+			this.emit("afterAll", hook);
 		}
-		if (typeof title === "function") {
-			var _ref8 = [fn.name, title];
-			title = _ref8[0];
-			fn = _ref8[1];
+	}, {
+		key: "afterEachWithRetry",
+		value: function afterEachWithRetry() {
+			if (this.pending) {
+				return;
+			}
+
+			var _normalize4 = _utils.normalize.apply(undefined, [this.times].concat(Array.prototype.slice.call(arguments)));
+
+			var times = _normalize4.times;
+			var title = _normalize4.title;
+			var fn = _normalize4.fn;
+
+			var hook = new _retryHook2.default(times, "\"after each\" hook: " + (title || "--"), fn);
+			hook.parent = this;
+			hook.timeout(this.timeout());
+			hook.slow(this.slow());
+			hook.ctx = this.ctx;
+			this._afterEach.push(hook);
+			this.emit("afterEach", hook);
 		}
-	}
+	}]);
 
-	times = times || this.times;
+	return RetrySuite;
+}(_mocha.Suite);
 
-	title = "\"before each\" hook" + (title ? ": " + title : "");
-	var hook = new _retryHook2.default(times, title, fn);
-	hook.parent = this;
-	hook.timeout(this.timeout());
-	hook.slow(this.slow());
-	hook.ctx = this.ctx;
-	this._beforeEach.push(hook);
-	this.emit("beforeEach", hook);
-	return this;
-};
-
-_mocha.Suite.prototype.afterAllWithRetry = function (times, title, fn) {
-	if (this.pending) {
-		return this;
-	}
-
-	if (!title) {
-		var _ref9 = [void 0, times.name, times];
-		times = _ref9[0];
-		title = _ref9[1];
-		fn = _ref9[2];
-	} else if (!fn) {
-		if (typeof times === "number") {
-			var _ref10 = [void 0, title];
-			title = _ref10[0];
-			fn = _ref10[1];
-		} else {
-			var _ref11 = [void 0, times, title];
-			times = _ref11[0];
-			title = _ref11[1];
-			fn = _ref11[2];
-		}
-		if (typeof title === "function") {
-			var _ref12 = [fn.name, title];
-			title = _ref12[0];
-			fn = _ref12[1];
-		}
-	}
-
-	times = times || this.times;
-
-	title = "\"after all\" hook" + (title ? ": " + title : "");
-	var hook = new _retryHook2.default(times, title, fn);
-	hook.parent = this;
-	hook.timeout(this.timeout());
-	hook.slow(this.slow());
-	hook.ctx = this.ctx;
-	this._afterAll.push(hook);
-	this.emit("afterAll", hook);
-	return this;
-};
-
-_mocha.Suite.prototype.afterEachWithRetry = function (times, title, fn) {
-	if (this.pending) {
-		return this;
-	}
-
-	if (!title) {
-		var _ref13 = [void 0, times.name, times];
-		times = _ref13[0];
-		title = _ref13[1];
-		fn = _ref13[2];
-	} else if (!fn) {
-		if (typeof times === "number") {
-			var _ref14 = [void 0, title];
-			title = _ref14[0];
-			fn = _ref14[1];
-		} else {
-			var _ref15 = [void 0, times, title];
-			times = _ref15[0];
-			title = _ref15[1];
-			fn = _ref15[2];
-		}
-		if (typeof title === "function") {
-			var _ref16 = [fn.name, title];
-			title = _ref16[0];
-			fn = _ref16[1];
-		}
-	}
-
-	times = times || this.times;
-
-	title = "\"after each\" hook" + (title ? ": " + title : "");
-	var hook = new _retryHook2.default(times, title, fn);
-	hook.parent = this;
-	hook.timeout(this.timeout());
-	hook.slow(this.slow());
-	hook.ctx = this.ctx;
-	this._afterEach.push(hook);
-	this.emit("afterEach", hook);
-	return this;
-};
+exports.default = RetrySuite;
 //# sourceMappingURL=retrySuite.js.map

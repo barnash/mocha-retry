@@ -250,5 +250,3 @@ describe("With global default retry but overriding it", () => {
 });
 
 delete process.env.MOCHA_RETRY;
-
-

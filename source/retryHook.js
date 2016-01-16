@@ -1,119 +1,98 @@
 "use strict";
 
+import {Runnable} from "mocha";
 
-var RetryHook, Runnable;
+export default class RetryHook extends Runnable {
 
-RetryHook = function (times, title, fn) {
-	Runnable.call(this, title, fn);
-	this.times = times || 1;
-	return this.type = "hook";
-};
-
-RetryHook.prototype.error = function (err) {
-	if (arguments.length === 0) {
-		err = this._error;
-		this._error = null;
-		return err;
+	constructor(times, title, fn) {
+		super(title, fn);
+		this.times = times || 1;
+		this.type = "hook";
 	}
-	return this._error = err;
-};
 
-RetryHook.prototype.run = function (fn) {
-	var done, emitted, finished, multiple, runTimes, start;
-	finished = emitted = void 0;
-	runTimes = 1;
-	multiple = (function (_this) {
-		return function (err) {
+	error(err) {
+		if (arguments.length === 0) {
+			err = this._error;
+			this._error = null;
+			return err;
+		}
+		return this._error = err;
+	}
+
+	run(fn) {
+		let finished;
+		let emitted;
+		let runTimes = 1;
+		const multiple = (err) => {
 			if (emitted) {
 				return;
 			}
 			emitted = true;
-			return _this.emit("error", err || new Error("done() called multiple times"));
+			this.emit("error", err || new Error("done() called multiple times"));
 		};
-	})(this);
-	done = (function (_this) {
-		return function (err) {
-			var start;
-			if (_this.timedOut) {
-				return;
-			}
-			if (finished) {
-				return multiple(err);
-			}
-			if ((err != null) && runTimes !== _this.times) {
+		const done = (err) => {
+			let start;
+			if (this.timedOut) {
+				// do nothing
+			} else if (finished) {
+				multiple(err);
+			} else if (err && runTimes !== this.times) {
 				runTimes++;
 				start = new Date;
-				return _this._run(fn, done);
-			}
-			_this.clearTimeout();
-			_this.duration = new Date - start;
-			finished = true;
-			return fn(err);
-		};
-	})(this);
-	start = new Date;
-	return this._run(fn, done);
-};
-
-RetryHook.prototype._run = function (fn, done) {
-	var callFn, ctx, err, error, error1, ms;
-	ms = this.timeout();
-	ctx = this.ctx;
-	if (ctx) {
-		ctx.runnable(this);
-	}
-	this.callback = done;
-	if (this.async) {
-		this.resetTimeout();
-		try {
-			this.fn.call(ctx, function (err) {
-				if (err instanceof Error || toString.call(err) === "[object Error]") {
-					return done(err);
-				}
-				if (err != null) {
-					return done(new Error("done() invoked with non-Error: " + err));
-				}
-				return done();
-			});
-		} catch (error) {
-			err = error;
-			done(err);
-		}
-		return;
-	}
-	if (this.asyncOnly) {
-		return done(new Error("--async-only option in use without declaring `done()`"));
-	}
-	callFn = (function (_this) {
-		return function (fn) {
-			var result;
-			result = fn.call(ctx);
-			if (result && typeof result.then === "function") {
-				_this.resetTimeout();
-				return result.then((function () {
-					return done();
-				}), done);
+				this._run(done);
 			} else {
-				return done();
+				this.clearTimeout();
+				this.duration = new Date - start;
+				finished = true;
+				fn(err);
 			}
 		};
-	})(this);
-	try {
-		if (this.pending) {
-			return done();
-		} else {
-			return callFn(this.fn);
-		}
-	} catch (error1) {
-		err = error1;
-		return done(err);
+		this._run(done);
 	}
-};
 
-Runnable = require("mocha").Runnable;
-
-RetryHook.prototype.__proto__ = Runnable.prototype;
-
-export default RetryHook;
-
-
+	_run(done) {
+		this.timeout();
+		const ctx = this.ctx;
+		if (ctx) {
+			ctx.runnable(this);
+		}
+		this.callback = done;
+		if (this.async) {
+			this.resetTimeout();
+			try {
+				this.fn.call(ctx, (error) => {
+					if (error instanceof Error || toString.call(error) === "[object Error]") {
+						done(error);
+					} else if (error) {
+						done(new Error("done() invoked with non-Error: " + error));
+					} else {
+						done();
+					}
+				});
+			} catch (error) {
+				done(error);
+			}
+		} else if (this.asyncOnly) {
+			done(new Error("--async-only option in use without declaring `done()`"));
+		} else {
+			const callFn = () => {
+				const result = this.fn.call(ctx);
+				if (result && typeof result.then === "function") {
+					this.resetTimeout();
+					result.then(() => done(), done);
+				} else {
+					done();
+				}
+			};
+			try {
+				if (this.pending) {
+					done();
+				} else {
+					callFn();
+				}
+			} catch (error) {
+				done(error);
+			}
+		}
+	}
+}

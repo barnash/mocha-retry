@@ -109,5 +109,3 @@ describe("Some retry suite with before with retry on tests", () => {
 		done();
 	});
 });
-
-
