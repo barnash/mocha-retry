@@ -7,16 +7,11 @@ export default class RetryHook extends Runnable {
 	constructor(times, title, fn) {
 		super(title, fn);
 		this.times = times || 1;
-		this.type = "hook";
 	}
 
-	error(err) {
-		if (arguments.length === 0) {
-			err = this._error;
-			this._error = null;
-			return err;
-		}
-		return this._error = err;
+	error(error = this._error) {
+		this._error = null;
+		return error;
 	}
 
 	run(fn) {

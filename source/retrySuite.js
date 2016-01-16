@@ -13,7 +13,7 @@ export default class RetrySuite extends Suite {
 
 		const {times, title, fn} = normalize(this.times, ...arguments);
 
-		const hook = new RetryHook(times, `"before all" hook: ${title || "--"}`, fn);
+		const hook = new RetryHook(times, `"before all" hook${title ? ": " + title : ""}`, fn);
 		hook.parent = this;
 		hook.timeout(this.timeout());
 		hook.slow(this.slow());
@@ -29,7 +29,7 @@ export default class RetrySuite extends Suite {
 
 		const {times, title, fn} = normalize(this.times, ...arguments);
 
-		const hook = new RetryHook(times, `"before each" hook: ${title || "--"}`, fn);
+		const hook = new RetryHook(times, `"before each" hook${title ? ": " + title : ""}`, fn);
 		hook.parent = this;
 		hook.timeout(this.timeout());
 		hook.slow(this.slow());
@@ -45,7 +45,7 @@ export default class RetrySuite extends Suite {
 
 		const {times, title, fn} = normalize(this.times, ...arguments);
 
-		const hook = new RetryHook(times, `"after all" hook: ${title || "--"}`, fn);
+		const hook = new RetryHook(times, `"after all${title ? ": " + title : ""}`, fn);
 		hook.parent = this;
 		hook.timeout(this.timeout());
 		hook.slow(this.slow());
@@ -61,7 +61,7 @@ export default class RetrySuite extends Suite {
 
 		const {times, title, fn} = normalize(this.times, ...arguments);
 
-		const hook = new RetryHook(times, `"after each" hook: ${title || "--"}`, fn);
+		const hook = new RetryHook(times, `"after each${title ? ": " + title : ""}`, fn);
 		hook.parent = this;
 		hook.timeout(this.timeout());
 		hook.slow(this.slow());

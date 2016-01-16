@@ -23,19 +23,16 @@ var RetryHook = function (_Runnable) {
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(RetryHook).call(this, title, fn));
 
 		_this.times = times || 1;
-		_this.type = "hook";
 		return _this;
 	}
 
 	_createClass(RetryHook, [{
 		key: "error",
-		value: function error(err) {
-			if (arguments.length === 0) {
-				err = this._error;
-				this._error = null;
-				return err;
-			}
-			this._error = err;
+		value: function error() {
+			var _error = arguments.length <= 0 || arguments[0] === undefined ? this._error : arguments[0];
+
+			this._error = null;
+			return _error;
 		}
 	}, {
 		key: "run",

@@ -93,6 +93,7 @@ function createInterface() {
 
 				var test = new _retryTest2.default(times, title, asuite.pending ? null : fn);
 				test.file = file;
+				test.suite = asuite;
 				asuite.addTest(test);
 				return test;
 			};

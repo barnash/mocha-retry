@@ -109,3 +109,17 @@ describe("Some retry suite with before with retry on tests", () => {
 		done();
 	});
 });
+
+describe("Some retry suite with a beforeEach method", () => {
+	let value = 0;
+	const retryTimes = 3;
+	beforeEach(() => {
+		value++;
+	});
+	it(retryTimes, "should call beforeEach for every retry", () => {
+		value.should.equal(retryTimes);
+		if (value !== retryTimes) {
+			throw new Error("Not correct value");
+		}
+	});
+});

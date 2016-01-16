@@ -44,7 +44,7 @@ var RetrySuite = function (_Suite) {
 			var title = _normalize.title;
 			var fn = _normalize.fn;
 
-			var hook = new _retryHook2.default(times, "\"before all\" hook: " + (title || "--"), fn);
+			var hook = new _retryHook2.default(times, "\"before all\" hook" + (title ? ": " + title : ""), fn);
 			hook.parent = this;
 			hook.timeout(this.timeout());
 			hook.slow(this.slow());
@@ -65,7 +65,7 @@ var RetrySuite = function (_Suite) {
 			var title = _normalize2.title;
 			var fn = _normalize2.fn;
 
-			var hook = new _retryHook2.default(times, "\"before each\" hook: " + (title || "--"), fn);
+			var hook = new _retryHook2.default(times, "\"before each\" hook" + (title ? ": " + title : ""), fn);
 			hook.parent = this;
 			hook.timeout(this.timeout());
 			hook.slow(this.slow());
@@ -86,7 +86,7 @@ var RetrySuite = function (_Suite) {
 			var title = _normalize3.title;
 			var fn = _normalize3.fn;
 
-			var hook = new _retryHook2.default(times, "\"after all\" hook: " + (title || "--"), fn);
+			var hook = new _retryHook2.default(times, "\"after all" + (title ? ": " + title : ""), fn);
 			hook.parent = this;
 			hook.timeout(this.timeout());
 			hook.slow(this.slow());
@@ -107,7 +107,7 @@ var RetrySuite = function (_Suite) {
 			var title = _normalize4.title;
 			var fn = _normalize4.fn;
 
-			var hook = new _retryHook2.default(times, "\"after each\" hook: " + (title || "--"), fn);
+			var hook = new _retryHook2.default(times, "\"after each" + (title ? ": " + title : ""), fn);
 			hook.parent = this;
 			hook.timeout(this.timeout());
 			hook.slow(this.slow());

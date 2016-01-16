@@ -1,6 +1,6 @@
 "use strict";
 
-import {Runnable} from "mocha";
+import {Runner, Runnable} from "mocha";
 
 export default class RetryTest extends Runnable {
 
@@ -8,13 +8,13 @@ export default class RetryTest extends Runnable {
 		super(title, fn);
 		this.times = times;
 		this.pending = !fn;
-		this.type = "test";
 	}
 
 	run(fn) {
 		let finished;
 		let emitted;
 		let runTimes = 1;
+		const runner = new Runner(this.suite);
 		const multiple = (err) => {
 			if (emitted) {
 				return;
@@ -31,7 +31,7 @@ export default class RetryTest extends Runnable {
 			} else if (err && runTimes !== this.times) {
 				runTimes++;
 				start = new Date;
-				this._run(done);
+				runner.hook("beforeEach", () => this._run(done));
 			} else {
 				this.clearTimeout();
 				this.duration = new Date - start;

@@ -24,7 +24,6 @@ var RetryTest = function (_Runnable) {
 
 		_this.times = times;
 		_this.pending = !fn;
-		_this.type = "test";
 		return _this;
 	}
 
@@ -36,6 +35,7 @@ var RetryTest = function (_Runnable) {
 			var finished = undefined;
 			var emitted = undefined;
 			var runTimes = 1;
+			var runner = new _mocha.Runner(this.suite);
 			var multiple = function multiple(err) {
 				if (emitted) {
 					return;
@@ -52,7 +52,9 @@ var RetryTest = function (_Runnable) {
 					} else if (err && runTimes !== _this2.times) {
 						runTimes++;
 						start = new Date();
-						_this2._run(done);
+						runner.hook("beforeEach", function () {
+							return _this2._run(done);
+						});
 					} else {
 						_this2.clearTimeout();
 						_this2.duration = new Date() - start;

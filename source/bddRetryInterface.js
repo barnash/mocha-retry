@@ -43,6 +43,7 @@ export default function createInterface() {
 				const {times, title, fn} = normalize(asuite.times || 1, ...args);
 				const test = new RetryTest(times, title, asuite.pending ? null : fn);
 				test.file = file;
+				test.suite = asuite;
 				asuite.addTest(test);
 				return test;
 			};
