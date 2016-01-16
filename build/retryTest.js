@@ -71,18 +71,18 @@ var RetryTest = function (_Runnable) {
 
 			this.timeout();
 			var ctx = this.ctx;
-			if (ctx) {
+			if (ctx && ctx.runnable) {
 				ctx.runnable(this);
 			}
 			this.callback = done;
 			if (this.async) {
 				this.resetTimeout();
 				try {
-					this.fn.call(ctx, function (err) {
-						if (err instanceof Error || toString.call(err) === "[object Error]") {
-							done(err);
-						} else if (err) {
-							done(new Error("done() invoked with non-Error: " + err));
+					this.fn.call(ctx, function (error) {
+						if (error instanceof Error) {
+							done(error);
+						} else if (error) {
+							done(new Error("done() invoked with non-Error: " + error));
 						} else {
 							done();
 						}

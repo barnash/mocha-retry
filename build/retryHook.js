@@ -75,7 +75,7 @@ var RetryHook = function (_Runnable) {
 
 			this.timeout();
 			var ctx = this.ctx;
-			if (ctx) {
+			if (ctx && ctx.runnable) {
 				ctx.runnable(this);
 			}
 			this.callback = done;
@@ -83,7 +83,7 @@ var RetryHook = function (_Runnable) {
 				this.resetTimeout();
 				try {
 					this.fn.call(ctx, function (error) {
-						if (error instanceof Error || toString.call(error) === "[object Error]") {
+						if (error instanceof Error) {
 							done(error);
 						} else if (error) {
 							done(new Error("done() invoked with non-Error: " + error));

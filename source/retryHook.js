@@ -48,7 +48,7 @@ export default class RetryHook extends Runnable {
 	_run(done) {
 		this.timeout();
 		const ctx = this.ctx;
-		if (ctx) {
+		if (ctx && ctx.runnable) {
 			ctx.runnable(this);
 		}
 		this.callback = done;
