@@ -56,7 +56,7 @@ export default class RetryHook extends Runnable {
 			this.resetTimeout();
 			try {
 				this.fn.call(ctx, (error) => {
-					if (error instanceof Error || toString.call(error) === "[object Error]") {
+					if (error instanceof Error) {
 						done(error);
 					} else if (error) {
 						done(new Error("done() invoked with non-Error: " + error));
