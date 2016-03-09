@@ -19,7 +19,7 @@
     "escape-string-regexp": "1.0.4"
   },
   "peerDependencies": {
-    "mocha": "2.3.4"
+    "mocha": ">=2.3.4"
   },
   "devDependencies": {
     "babel-cli": "6.4.0",
